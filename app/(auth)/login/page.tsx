@@ -15,6 +15,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 
 function Copyright(props: any) {
   return (
@@ -35,28 +36,32 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
       const res = await fetch(
-        "https://api.glue.pitetris.com/margaret/role-user/login",
+        "https://api.glue.pitetris.com/margaret/v1/user/signin",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: {
+          body: JSON.stringify({
             user_id: data.get("email"),
             password: data.get("password"),
-          },
+          }),
         }
       );
-      console.log({
-        email: data.get("email"),
-        password: data.get("password"),
-      });
+      console.log(res);
+      // console.log({
+      //   email: data.get("email"),
+      //   password: data.get("password"),
+      // });
 
+      router.push("/");
       // Handle successful response (e.g., redirect to protected area)
     } catch (error) {
       console.error("Error logging in:", error);
@@ -81,7 +86,8 @@ export default function SignIn() {
           src="/images/glue.png"
           height={150}
           width={150}
-          className="hidden md:block"
+          priority={true}
+          className="md:block"
           alt="Glue logo"
         />
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 0 }}>
@@ -124,7 +130,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
